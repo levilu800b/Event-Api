@@ -28,11 +28,8 @@ app.use(cors());
 app.use(morgan('combined'));
 
 app.post('/auth', async (req, res) => {
-  console.log(req.body);
   const user = await User.findOne({username : req.body.username})
   const userF = await User.find(); 
-  console.log(userF);
-  console.log(user);
   if (!user) {
     return res.sendStatus(401)
   }
@@ -44,37 +41,38 @@ app.post('/auth', async (req, res) => {
   res.send({token: user.token})
 })
 
-app.use(async (req, res, next) => {
+app.use(async(req, res, next) => {
   const authHeader = req.headers['authorization']
-  const user = await User.findOne({token: authHeader})
+  const user = await User.findOne({ token: authHeader })
   if (user) {
-    next()
-  } else{
-    res.sendStatus(403)
+      next()
+  } else {
+      res.sendStatus(403)
   }
 })
 
 // defining an endpoint to return all ads
-app.get('/', async (req, res) => {
+app.get('/', async(req, res) => {
   res.send(await Ad.find());
 });
 
-app.post('/', async (req, res) => {
+app.post('/', async(req, res) => {
   const newAd = req.body;
   const ad = new Ad(newAd);
   await ad.save();
   res.send({ message: 'New ad inserted.' });
 });
 
-app.delete('/:id', async (req, res) => {
+app.delete('/:id', async(req, res) => {
   await Ad.deleteOne({ _id: ObjectId(req.params.id) })
   res.send({ message: 'Ad removed.' });
 });
 
-app.put('/:id', async (req, res) => {
-  await Ad.findOneAndUpdate({ _id: ObjectId(req.params.id)}, req.body )
+app.put('/:id', async(req, res) => {
+  await Ad.findOneAndUpdate({ _id: ObjectId(req.params.id) }, req.body)
   res.send({ message: 'Ad updated.' });
 });
+
 
 // starting the server
 app.listen(3001, () => {
