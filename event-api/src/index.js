@@ -75,7 +75,7 @@ app.put('/:id', async(req, res) => {
 
 
 // starting the server
-app.listen(3001, () => {
+app.listen(process.env.PORT || 3001, () => {
   console.log('listening on port 3001');
 });
 
